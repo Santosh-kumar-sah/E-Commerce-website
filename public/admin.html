@@ -1,0 +1,60 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Admin Dashboard</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <header><h2>Admin - Product Management</h2></header>
+  <main>
+    <form id="product-form">
+      <input name="name" placeholder="Name" required />
+      <input name="price" placeholder="Price" required />
+      <input name="category" placeholder="Category" />
+      <input name="image" placeholder="Image URL" />
+      <textarea name="description" placeholder="Description"></textarea>
+      <button>Add Product</button>
+    </form>
+    <div id="product-list"></div>
+  </main>
+
+<script>
+async function loadProducts() {
+  const token = localStorage.getItem('token');
+  const res = await fetch('/api/products', { headers: token?{ Authorization: 'Bearer ' + token } : {} });
+  const data = await res.json();
+  const list = document.getElementById('product-list');
+  list.innerHTML = '';
+  (data.products || data).forEach(p => {
+    const el = document.createElement('div');
+    el.innerHTML = `<strong>${p.name}</strong> - ₹${p.price}
+      <button data-id="${p._id}" class="del">Delete</button>
+      <button data-id="${p._id}" class="edit">Edit</button>`;
+    list.appendChild(el);
+  });
+  document.querySelectorAll('.del').forEach(b => b.onclick = deleteProduct);
+}
+
+async function deleteProduct(e) {
+  const id = e.target.dataset.id;
+  const token = localStorage.getItem('token');
+  await fetch('/api/products/' + id, { method: 'DELETE', headers: { Authorization: 'Bearer ' + token } });
+  loadProducts();
+}
+
+document.getElementById('product-form').onsubmit = async (ev) => {
+  ev.preventDefault();
+  const fd = new FormData(ev.target);
+  const body = Object.fromEntries(fd.entries());
+  body.price = Number(body.price);
+  const token = localStorage.getItem('token');
+  await fetch('/api/products', { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token }, body: JSON.stringify(body) });
+  ev.target.reset();
+  loadProducts();
+};
+
+loadProducts();
+</script>
+</body>
+</html>

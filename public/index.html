@@ -1,0 +1,36 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Pro E-Commerce</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <header>
+    <h1>Pro E-Commerce</h1>
+    <div id="nav">
+      <input id="search" placeholder="Search products..." />
+      <select id="category"><option value="">All Categories</option></select>
+      <button id="view-cart">Cart (<span id="cart-count">0</span>)</button>
+      <button id="login-btn">Login</button>
+    </div>
+  </header>
+
+  <main>
+    <section id="products" class="grid"></section>
+  </main>
+
+  <div id="cart-modal" class="modal hidden">
+    <div class="modal-content">
+      <h3>Your Cart</h3>
+      <div id="cart-items"></div>
+      <div>Total: ₹<span id="cart-total">0</span></div>
+      <button id="checkout">Checkout</button>
+      <button id="close-cart">Close</button>
+    </div>
+  </div>
+
+  <script src="/js/app.js"></script>
+</body>
+</html>
